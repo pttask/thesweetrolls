@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{{ product['name'] }} - The Sweet Rolls{% endblock %}
+{% block nav_variant %}nav-light{% endblock %}
+
+{% block content %}
+<section class="py-5" style="background-color: {{ product['hero_bg'] }}; min-height: 90vh;">
+    <div class="container py-4">
+        <a href="{{ url_for('product_list') }}" class="text-dark text-decoration-none d-inline-flex align-items-center gap-2 mb-4">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Back to Products
+        </a>
+
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6 text-center order-2 order-lg-1">
+                <img src="{{ url_for('static', filename='images/' + product['image']) }}" alt="{{ product['name'] }}" class="detail-plate">
+            </div>
+            <div class="col-lg-6 order-1 order-lg-2">
+                <h1 class="hero-title mb-3" style="font-size: clamp(2.4rem, 5vw, 3.6rem);">{{ product['name'] }}</h1>
+                <p class="fs-5 mb-2">{{ product['tagline'] }}</p>
+                <p class="text-secondary mb-4">{{ product['description'] }}</p>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-4">
+                        <div class="detail-feature-pill">
+                            <span>🥟</span><small class="fw-semibold">{{ product['feature1'] }}</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="detail-feature-pill">
+                            <span>🍌</span><small class="fw-semibold">{{ product['feature2'] }}</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="detail-feature-pill">
+                            <span>⭐</span><small class="fw-semibold">{{ product['feature3'] }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="fw-bold mb-4" style="font-family: var(--font-display); color: var(--tsr-orange);">
+                    Rp {{ '{:,}'.format(product['price']).replace(',', '.') }}
+                </h3>
+
+                <form action="{{ url_for('cart_add') }}" method="post" class="d-flex align-items-center gap-3 flex-wrap">
+                    <input type="hidden" name="product_id" value="{{ product['id'] }}">
+                    <div class="qty-control">
+                        <button type="button" onclick="stepQty(-1)">&minus;</button>
+                        <input type="number" name="qty" id="qtyInput" value="1" min="1" readonly>
+                        <button type="button" onclick="stepQty(1)">+</button>
+                    </div>
+                    <button type="submit" class="btn btn-tsr-dark px-5">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function stepQty(delta) {
+    const input = document.getElementById('qtyInput');
+    let val = parseInt(input.value) + delta;
+    if (val < 1) val = 1;
+    input.value = val;
+}
+</script>
+{% endblock %}

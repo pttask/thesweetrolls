@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}The Sweet Rolls - Home{% endblock %}
+{% block nav_variant %}nav-light{% endblock %}
+
+{% block content %}
+<section class="hero-section" id="heroSection" style="background-color: {{ products[0]['hero_bg'] }};">
+    <div class="container">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6">
+                <h1 class="hero-title" id="heroTitle">{{ products[0]['name'].upper() }}S</h1>
+                <p class="hero-tagline" id="heroTagline">{{ products[0]['tagline'] }}</p>
+                <a href="{{ url_for('product_detail', slug=products[0]['slug']) }}" class="btn btn-tsr-orange" id="heroOrderBtn">Order Now</a>
+
+                <div class="hero-thumbs" id="heroThumbs">
+                    {% for p in products %}
+                    <div class="hero-thumb {{ 'active' if loop.first }}"
+                         data-slug="{{ p['slug'] }}"
+                         data-name="{{ p['name'].upper() }}S"
+                         data-tagline="{{ p['tagline'] }}"
+                         data-bg="{{ p['hero_bg'] }}"
+                         data-image="{{ url_for('static', filename='images/' + p['image']) }}">
+                        <img src="{{ url_for('static', filename='images/' + p['image']) }}" alt="{{ p['name'] }}">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-plate-wrap">
+                    <img id="heroPlateImg" src="{{ url_for('static', filename='images/' + products[0]['image']) }}" alt="{{ products[0]['name'] }}">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const thumbs = document.querySelectorAll('.hero-thumb');
+    const heroSection = document.getElementById('heroSection');
+    const heroTitle = document.getElementById('heroTitle');
+    const heroTagline = document.getElementById('heroTagline');
+    const heroPlateImg = document.getElementById('heroPlateImg');
+    const heroOrderBtn = document.getElementById('heroOrderBtn');
+
+    thumbs.forEach(function (thumb) {
+        thumb.addEventListener('click', function () {
+            // Update active state
+            thumbs.forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+
+            // Fade out, swap content, fade in — no page navigation
+            heroPlateImg.style.opacity = 0;
+            setTimeout(function () {
+                heroTitle.textContent = thumb.dataset.name;
+                heroTagline.textContent = thumb.dataset.tagline;
+                heroPlateImg.src = thumb.dataset.image;
+                heroSection.style.backgroundColor = thumb.dataset.bg;
+                heroOrderBtn.href = '/product/' + thumb.dataset.slug;
+                heroPlateImg.style.opacity = 1;
+            }, 200);
+        });
+    });
+});
+</script>
+{% endblock %}

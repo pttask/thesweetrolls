@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Pesanan Berhasil - The Sweet Rolls{% endblock %}
+{% block nav_variant %}nav-light{% endblock %}
+
+{% block content %}
+<section class="checkout-page-bg py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="checkout-card text-center">
+                    <div style="font-size: 3.5rem;">🎉</div>
+                    <h2 class="fw-bold mt-3" style="font-family: var(--font-display);">Pesanan Berhasil!</h2>
+                    <p class="text-secondary">Terima kasih, {{ order['full_name'] }}. Pesanan Anda sedang kami proses.</p>
+
+                    <div class="text-start mt-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary">Order ID</span>
+                            <strong>#{{ '%04d' % order['id'] }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary">Metode Pengiriman</span>
+                            <strong>{{ 'Delivery' if order['delivery_method'] == 'delivery' else 'Pick Up' }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-secondary">Metode Pembayaran</span>
+                            <strong>{{ 'Bank Transfer' if order['payment_method'] == 'bank_transfer' else 'Cash on Delivery' }}</strong>
+                        </div>
+                        <hr>
+                        {% for it in order_items %}
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>{{ it['product_name'] }} &times; {{ it['qty'] }}</span>
+                            <span>Rp {{ '{:,}'.format(it['price'] * it['qty']).replace(',', '.') }}</span>
+                        </div>
+                        {% endfor %}
+                        <hr>
+                        <div class="d-flex justify-content-between checkout-total-row">
+                            <span>Total</span>
+                            <span>Rp {{ '{:,}'.format(order['total']).replace(',', '.') }}</span>
+                        </div>
+                    </div>
+
+                    <a href="{{ url_for('home') }}" class="btn btn-tsr-dark mt-4 px-5">Kembali ke Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
