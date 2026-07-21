@@ -2,18 +2,23 @@
 The Sweet Rolls - Flask e-commerce POV (user-facing) application.
 Tugas 11 Praktikum Sistem Multimedia.
 """
+import os
 import sqlite3
 from datetime import datetime
 
 from flask import Flask, g, render_template, request, redirect, url_for, session, flash, jsonify
 
-DATABASE = "sweetrolls.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE = os.path.join(BASE_DIR, "sweetrolls.db")
 DELIVERY_FEE = 10000
 
 app = Flask(__name__)
-app.secret_key = "sweetrolls-dev-secret-key-change-in-production"
+app.secret_key = os.environ.get("SECRET_KEY", "sweetrolls-dev-secret-key-change-in-production")
 
-
+if not os.path.exists(DATABASE):
+    from seed import seed_database
+    seed_database(DATABASE)
+    
 # ---------- Database helpers ----------
 
 def get_db():

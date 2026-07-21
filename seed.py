@@ -2,9 +2,12 @@
 Seed the SQLite database with initial product data for The Sweet Rolls.
 Run: python seed.py
 """
+import os
 import sqlite3
 
-DB_PATH = "sweetrolls.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "sweetrolls.db")
+SCHEMA_PATH = os.path.join(BASE_DIR, "schema.sql")
 
 PRODUCTS = [
     {
@@ -65,9 +68,11 @@ PRODUCTS = [
 ]
 
 
-def main():
-    conn = sqlite3.connect(DB_PATH)
-    with open("schema.sql", "r") as f:
+def seed_database(db_path=None):
+    """Create schema and insert initial products. Safe to import and call from app.py."""
+    db_path = db_path or DB_PATH
+    conn = sqlite3.connect(db_path)
+    with open(SCHEMA_PATH, "r") as f:
         conn.executescript(f.read())
 
     conn.executemany(
@@ -87,4 +92,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    seed_database()
