@@ -106,7 +106,7 @@ def product_detail(slug):
         return redirect(url_for("product_list"))
     other_products = [p for p in get_all_products() if p["slug"] != slug]
     return render_template(
-        "product_detail.html", product=product, other_products=other_products, active_page="product"
+        "product_detail.html", product=product, active_page="product"
     )
 
 
